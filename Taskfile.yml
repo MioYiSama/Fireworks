@@ -1,0 +1,10 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: "3"
+
+tasks:
+  configure:
+    cmds:
+      - cmake -B build -G "Ninja Multi-Config" .
+    env:
+      CMAKE_EXPORT_COMPILE_COMMANDS: true
