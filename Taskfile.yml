@@ -3,6 +3,14 @@
 version: "3"
 
 tasks:
+  subset-font:
+    desc: Regenerate the embedded serif subset; --text must cover every string drawn in src/greeting.cpp.
+    cmds:
+      - >-
+        uvx --from fonttools pyftsubset assets/NotoSerifSC-VariableFont_wght.ttf
+        --text='For.2024.宝宝:HappyBirthday' --name-IDs='*'
+        --output-file=assets/NotoSerifSC-Subset.ttf
+
   configure:
     cmds:
       - cmake -B build -G "Ninja Multi-Config" .

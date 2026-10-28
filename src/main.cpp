@@ -6,7 +6,6 @@
 #include <SFML/Graphics.hpp>
 
 #include <algorithm>
-#include <filesystem>
 #include <random>
 
 namespace {
@@ -17,13 +16,22 @@ constexpr unsigned kHeight = 800;
 // Random text-layer pixels blacked out per second: greetings decay at ~0.65/s per pixel, as measured.
 constexpr float kErosionPerSecond = 620'000.f;
 
+// NotoSerifSC subset to the glyphs greeting.cpp draws; regenerate with `task subset-font` when its text changes.
+// sf::Font reads from this buffer for its whole lifetime, so it must have static storage.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc23-extensions" // #embed is C++26; clang accepts it in C++23 as an extension.
+constexpr unsigned char kSerifFont[] = {
+#embed "../assets/NotoSerifSC-Subset.ttf"
+};
+#pragma clang diagnostic pop
+
 } // namespace
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({kWidth, kHeight}), "Fireworks", sf::Style::Titlebar | sf::Style::Close);
     window.setFramerateLimit(60);
 
-    const sf::Font serif(std::filesystem::path(FIREWORKS_ASSET_DIR) / "NotoSerifSC-VariableFont_wght.ttf");
+    const sf::Font serif(kSerifFont, sizeof(kSerifFont));
 
     Random rng(std::random_device{}());
     Canvas sky(kWidth, kHeight);   // rocket spark trails; fades smoothly
