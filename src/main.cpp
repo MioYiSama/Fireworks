@@ -47,7 +47,9 @@ int main() {
                 window.close();
         }
 
-        const float dt = std::min(clock.restart().asSeconds(), 0.05f);
+        float dt = std::min(clock.restart().asSeconds(), 0.05f);
+        static const char* const capture = std::getenv("FW_CAPTURE"); // CAPTURE-TMP
+        if (capture) dt = 1.f / 30.f; // CAPTURE-TMP
 
         erosionDebt += kErosionPerSecond * dt;
         const int pixels = static_cast<int>(erosionDebt);
@@ -62,6 +64,11 @@ int main() {
         banner.draw(frame, sky, text);
         show.draw(frame);
         texture.update(frame.rgba());
+        static int capFrame = 0; // CAPTURE-TMP
+        if (capture) { // CAPTURE-TMP
+            (void)texture.copyToImage().saveToFile(std::string(capture) + "/f_" + std::to_string(capFrame++) + ".png");
+            if (capFrame >= 297) window.close();
+        }
         window.clear();
         window.draw(sprite);
         window.display();

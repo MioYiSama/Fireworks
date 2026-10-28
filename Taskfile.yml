@@ -8,3 +8,12 @@ tasks:
       - cmake -B build -G "Ninja Multi-Config" .
     env:
       CMAKE_EXPORT_COMPILE_COMMANDS: true
+
+  configure-windows:
+    cmds:
+      - cmake -B build-windows -G "Ninja Multi-Config" --toolchain cmake/x86_64-pc-windows-msvc.cmake .
+
+  build-windows:
+    deps: [configure-windows]
+    cmds:
+      - cmake --build build-windows --config Release
